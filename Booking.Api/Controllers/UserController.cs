@@ -1,4 +1,6 @@
-﻿using Booking.Application.Features.Users.Register;
+using Booking.Application.Abstractions.Contracts;
+using Booking.Application.Features.Users.Login;
+using Booking.Application.Features.Users.Register;
 using Booking.Domain.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +29,17 @@ namespace Booking.Api.Controllers
             var userId = await _mediator.Send(command);
 
             return CreatedAtAction(nameof(Register), new { id = userId }, userId);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<AuthTokenResult>> Login([FromBody] LoginUserCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (result == null)
+                return Unauthorized();
+
+            return Ok(result);
         }
     }
 }
