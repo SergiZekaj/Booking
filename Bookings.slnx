@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
+    <File Path=".gitignore" />
   </Folder>
   <Project Path="Booking.Api/Booking.Api.csproj" />
   <Project Path="Booking.Application/Booking.Application.csproj" />

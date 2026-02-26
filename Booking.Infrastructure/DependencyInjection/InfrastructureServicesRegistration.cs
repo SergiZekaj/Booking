@@ -1,11 +1,24 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Text;
+using Booking.Application.Abstractions.Contracts;
+using Booking.Infrastructure.Contracts.AuthService;
+using Booking.Infrastructure.Features;
+using Booking.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
-//namespace Booking.Infrastructure
-//{
-//    internal class InfrastructureServivesRegistration
-//    {
-//        public static ISer
-//    }
-//}
+namespace Booking.Infrastructure.DependencyInjection
+{
+    public static class InfrastructureServicesRegistration
+    {
+        public static IServiceCollection AddInfrastructureServices(
+            this IServiceCollection services,
+            string connectionString)
+        {
+            services.AddDbContext<BookingDbContext>(options => options.UseSqlServer(connectionString));
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAuthManager, AuthManager>();
+
+            return services;
+        }
+    }
+}
