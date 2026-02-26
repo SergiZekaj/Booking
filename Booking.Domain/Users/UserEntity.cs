@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Booking.Domain.Users
 {
-    public class UserEntity //changed internal to public so the other projects can access it.
+    public class UserEntity 
     {
         [Key]
         public Guid Id { get; set; }
@@ -21,7 +21,7 @@ namespace Booking.Domain.Users
         [Required, MaxLength(150)]
         public string Email { get; set; } = string.Empty;
         [Required]
-        public string PasswordHash { get; set; } = null!; //new
+        public string PasswordHash { get; set; } = null!; 
         public string PhoneNumber { get; set; } = string.Empty;
         public string ProfileImageUrl { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
