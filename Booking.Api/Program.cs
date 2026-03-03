@@ -1,7 +1,9 @@
-using Booking.Application.Abstractions.Contracts;
-using Booking.Application.Features.DependencyInjection;
-using Booking.Infrastructure.DependencyInjection;
 using Booking.Api.Middleware;
+using Booking.Application.Abstractions.Contracts;
+using Booking.Application.Contracts;
+using Booking.Application.Features.DependencyInjection;
+using Booking.Infrastructure;
+using Booking.Infrastructure.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration.GetConnectionString("DefaultConnection")!);
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
