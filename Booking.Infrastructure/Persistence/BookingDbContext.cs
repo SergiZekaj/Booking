@@ -90,6 +90,15 @@ namespace Booking.Infrastructure.Persistence
             builder.Entity<ReviewEntity>()
                 .HasIndex(r => r.BookingId)
                 .IsUnique();
+
+            builder.Entity<RoleEntity>().HasData(
+                new RoleEntity
+                {
+                    Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
+                    Name = "User",
+                    Description = "Default user role",
+                    IsDefault = true
+                });
         }
  
     }
