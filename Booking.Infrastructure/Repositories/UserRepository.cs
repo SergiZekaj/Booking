@@ -20,8 +20,5 @@ namespace Booking.Infrastructure.Features
                 .Include(u => u.UserRolesEntity)
                 .ThenInclude(ur => ur.Role)
                 .FirstOrDefaultAsync(u => u.Email == email);
-
-        public async Task<int> SaveChangesAsync()
-            => await _context.SaveChangesAsync();
     }
 }

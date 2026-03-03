@@ -2,6 +2,7 @@
 using Booking.Application.Abstractions.Contracts;
 using Booking.Domain.Users;
 using Booking.Domain.UserRoles;
+using Booking.Application.Contracts;
 
 namespace Booking.Application.Features.Users.Register
 {
@@ -9,11 +10,13 @@ namespace Booking.Application.Features.Users.Register
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository) 
+        public RegisterUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository, IUnitOfWork unitOfWork) 
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Guid> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -25,7 +28,7 @@ namespace Booking.Application.Features.Users.Register
                 throw new Exception("Email already registered");
 
             var defaultRole = await _roleRepository.GetDefaultRoleAsync(cancellationToken);
-            if (defaultRole != null)
+            if (defaultRole == null)
                 throw new Exception("No default role found");
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
@@ -53,7 +56,7 @@ namespace Booking.Application.Features.Users.Register
 
 
             await _userRepository.AddAsync(user, cancellationToken);
-            await _userRepository.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return user.Id;
         }
