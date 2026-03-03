@@ -16,7 +16,7 @@ namespace Booking.Application.Features.DependencyInjection
         public async Task<TResponse> Handle(
             TRequest request,
             RequestHandlerDelegate<TResponse> next,
-            CancellationToken cancellationToken)sS
+            CancellationToken cancellationToken)
         {
             if (!_validators.Any())
             {

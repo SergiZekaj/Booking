@@ -1,15 +1,19 @@
 ﻿using MediatR;
 using Booking.Application.Abstractions.Contracts;
 using Booking.Domain.Users;
+using Booking.Domain.UserRoles;
 
 namespace Booking.Application.Features.Users.Register
 {
     internal class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Guid>
     {
         private readonly IUserRepository _userRepository;
-        public RegisterUserCommandHandler(IUserRepository userRepository) 
+        private readonly IRoleRepository _roleRepository;
+
+        public RegisterUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository) 
         {
             _userRepository = userRepository;
+            _roleRepository = roleRepository;
         }
 
         public async Task<Guid> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -19,6 +23,10 @@ namespace Booking.Application.Features.Users.Register
             var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
             if (existingUser != null)
                 throw new Exception("Email already registered");
+
+            var defaultRole = await _roleRepository.GetDefaultRoleAsync(cancellationToken);
+            if (defaultRole != null)
+                throw new Exception("No default role found");
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
@@ -34,7 +42,17 @@ namespace Booking.Application.Features.Users.Register
                 IsActive = true
             };
 
-            await _userRepository.AddAsync(user);
+            var userRole = new UserRoleEntity
+            {
+                UserId = user.Id,
+                RoleId = defaultRole.Id,
+                AssignedAt = DateTime.UtcNow
+            };
+
+            user.UserRolesEntity.Add(userRole);
+
+
+            await _userRepository.AddAsync(user, cancellationToken);
             await _userRepository.SaveChangesAsync();
 
             return user.Id;
