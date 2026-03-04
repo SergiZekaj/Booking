@@ -1,14 +1,14 @@
 using Booking.Application.Abstractions.Contracts;
 using Booking.Application.Features.Users.Login;
 using Booking.Application.Features.Users.Register;
-using Booking.Domain.Users;
+using Booking.Application.Features.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;

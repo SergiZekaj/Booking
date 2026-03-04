@@ -23,6 +23,12 @@ namespace Booking.Api.Middleware
 
                 await context.Response.WriteAsJsonAsync(new { errors });
             }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsJsonAsync(new { error = ex.Message });
+            }
         }
     }
 }
