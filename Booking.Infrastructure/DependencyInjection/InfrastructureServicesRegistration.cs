@@ -19,6 +19,7 @@ namespace Booking.Infrastructure.DependencyInjection
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthManager, AuthManager>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IPropertyRepository, PropertyRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             return services;

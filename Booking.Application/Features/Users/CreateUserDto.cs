@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Booking.Domain.Users
+namespace Booking.Application.Features.Users
 {
     public class CreateUserDto
     {
