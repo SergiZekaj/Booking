@@ -1,13 +1,12 @@
 ﻿using Booking.Domain.Estate;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Booking.Application.Features.Property.Queries.GetAll;
 
 namespace Booking.Application.Abstractions.Contracts
 {
     public interface IPropertyRepository : IGenericRepository<PropertyEntity>
     {
-        //Task<List<PropertyEntity>> GetAllByOwnerIdAsync(Guid guid, CancellationToken cancellationToken); 
-        //Task<List<PropertyEntity>> GetAllActiveAsync(CancellationToken cancellationToken);
+        Task<PropertyEntity?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken);
+        Task<List<PropertyEntity>> GetAllActiveAsync(PropertyFilterDto filter, CancellationToken cancellationToken);
+
     }
 }
