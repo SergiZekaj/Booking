@@ -13,6 +13,7 @@ namespace Booking.Application.Features.DependencyInjection
             services.AddValidatorsFromAssembly(typeof(ApplicationServicesRegistration).Assembly);
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddAutoMapper(typeof(ApplicationServicesRegistration).Assembly);
 
             return services;
 
