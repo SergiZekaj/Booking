@@ -1,4 +1,6 @@
 ﻿using Booking.Application.Features.Property.Commands.Create;
+using Booking.Application.Features.Property.Commands.Delete;
+using Booking.Application.Features.Property.Commands.Update;
 using Booking.Application.Features.Property.Queries.GetAll;
 using Booking.Application.Features.Property.Queries.GetById;
 using MediatR;
@@ -42,6 +44,25 @@ namespace Booking.Api.Controllers
         {
             var result = await _mediator.Send(new GetAllPropertiesQuery { Filter = filter });
             return Ok(result);
+        }
+
+        [HttpPut("update/{id}")]
+        public async Task<ActionResult<GetPropertyByIdDto>> Update([FromRoute] Guid id, [FromBody] UpdatePropertyDto updateDto)
+        {
+            var command = new UpdatePropertyCommand
+            {
+                Id = id,
+                Update = updateDto
+            };
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id) 
+        {
+            await _mediator.Send(new DeletePropertyCommand { Id = id });
+            return NoContent();
         }
     }
 }

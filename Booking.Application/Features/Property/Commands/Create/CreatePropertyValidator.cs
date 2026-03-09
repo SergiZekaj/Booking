@@ -17,6 +17,10 @@ namespace Booking.Application.Features.Property.Commands.Create
             RuleFor(x => x.PropertyDto.MaxGuests)
                 .GreaterThan(0);
 
+            RuleFor(x => x.PropertyDto.PropertyType)
+                .IsInEnum()
+                .WithMessage("Invalid property type.");
+
             RuleFor(x => x.PropertyDto.Country)
                 .NotEmpty();
 
