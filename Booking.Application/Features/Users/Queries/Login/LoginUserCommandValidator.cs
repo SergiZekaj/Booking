@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Booking.Application.Features.Users.Login
+namespace Booking.Application.Features.Users.Queries.Login
 {
     public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
     {

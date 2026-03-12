@@ -4,7 +4,7 @@ using Booking.Domain.Users;
 using Booking.Domain.UserRoles;
 using Booking.Application.Contracts;
 
-namespace Booking.Application.Features.Users.Register
+namespace Booking.Application.Features.Users.Commands.Register
 {
     internal class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Guid>
     {
