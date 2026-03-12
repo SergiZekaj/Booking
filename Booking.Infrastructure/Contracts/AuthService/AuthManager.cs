@@ -57,7 +57,7 @@ namespace Booking.Infrastructure.Contracts.AuthService
             {
                 new(JwtRegisteredClaimNames.Sub, user.Email),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new("uid", user.Id.ToString()),
             };
 
             claims.AddRange(userRoles

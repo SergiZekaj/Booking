@@ -1,7 +1,7 @@
 using Booking.Application.Abstractions.Contracts;
 using MediatR;
 
-namespace Booking.Application.Features.Users.Login
+namespace Booking.Application.Features.Users.Queries.Login
 {
     public class LoginUserCommand : IRequest<AuthTokenResult?>
     {
