@@ -14,9 +14,9 @@ namespace Booking.Infrastructure.Repositories
         public CloudinaryService(IConfiguration configuration)
         {
             var account = new Account(
-                configuration["Cloudinary:dxcycbrej"],
-                configuration["Cloudinary:389913159668595"],
-                configuration["Cloudinary:CpdMEzSFe2bIPvhi6yGRUFcvkis"]
+                configuration["Cloudinary:CloudName"],
+                configuration["Cloudinary:ApiKey"],
+                configuration["Cloudinary:ApiSecret"]
              );
             _cloudinary = new Cloudinary(account);
         }
