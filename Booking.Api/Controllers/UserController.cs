@@ -72,7 +72,8 @@ namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, Ap
         }
 
         [HttpPost("upload-profile-photo")]
-        public async Task<ActionResult<string>> UploadProfilePhoto([FromBody] IFormFile file)
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult<string>> UploadProfilePhoto([FromForm] IFormFile file)
         {
             var result = await _mediator.Send(new UploadProfilePhotoCommand { File = file });
             return Ok(result);
