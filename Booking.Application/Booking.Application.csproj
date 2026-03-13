@@ -30,6 +30,7 @@
   <ItemGroup>
     <Folder Include="Features\Users\Commands\ChangePassword\" />
     <Folder Include="Features\Users\Commands\ForgotPassword\" />
+    <Folder Include="Features\Users\Commands\NewFolder\" />
     <Folder Include="Features\Users\Commands\ResetPassword\" />
   </ItemGroup>
 

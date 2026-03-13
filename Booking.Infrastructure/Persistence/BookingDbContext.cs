@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Booking.Domain.Addresses;
+﻿using Booking.Domain.Addresses;
 using Booking.Domain.Bookings;
 using Booking.Domain.Estate;
 using Booking.Domain.OwnerProfiles;
@@ -9,6 +6,7 @@ using Booking.Domain.Reviews;
 using Booking.Domain.Roles;
 using Booking.Domain.UserRoles;
 using Booking.Domain.Users;
+using Booking.Domain.PropertyImage;
 using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Infrastructure.Persistence
@@ -25,6 +23,7 @@ namespace Booking.Infrastructure.Persistence
         public DbSet<AddressEntity> Addresses { get; set; }
         public DbSet<BookingEntity> Bookings { get; set; }    
         public DbSet<ReviewEntity> Reviews { get; set; }  
+        public DbSet<PropertyImageEntity> PropertyImage { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -90,6 +89,12 @@ namespace Booking.Infrastructure.Persistence
             builder.Entity<ReviewEntity>()
                 .HasIndex(r => r.BookingId)
                 .IsUnique();
+
+            builder.Entity<PropertyImageEntity>()
+                .HasOne(pi => pi.Property)
+                .WithMany(p => p.Images)
+                .HasForeignKey(pi => pi.PropertyId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<RoleEntity>().HasData(
                 new RoleEntity

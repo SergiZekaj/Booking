@@ -27,6 +27,7 @@ namespace Booking.Infrastructure.DependencyInjection
             services.AddScoped<IPropertyRepository, PropertyRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<ICloudinaryService, CloudinaryService>();
+            services.AddScoped<IPropertyImageRepository, PropertyImageRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
