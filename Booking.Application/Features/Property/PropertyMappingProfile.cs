@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Booking.Application.Features.Property.Queries.GetAll;
+using Booking.Application.Features.Property.Queries.GetAllPropertyPhotos;
 using Booking.Application.Features.Property.Queries.GetById;
 using Booking.Domain.Estate;
+using Booking.Domain.PropertyImage;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +25,8 @@ namespace Booking.Application.Features.Property
             CreateMap<PropertyEntity, GetAllPropertiesDto>()
                 .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Address.Country))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City));
+
+            CreateMap<PropertyImageEntity, GetAllPropertyPhotosDto>();
         }
     }
 }

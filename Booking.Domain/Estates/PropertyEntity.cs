@@ -1,6 +1,7 @@
 ﻿using Booking.Domain.Addresses;
 using Booking.Domain.Bookings;
 using Booking.Domain.Enums;
+using Booking.Domain.PropertyImage;
 using Booking.Domain.Users;
 using System;
 using System.Collections.Generic;
@@ -35,5 +36,6 @@ namespace Booking.Domain.Estate
         public DateTime? LastBookedOnUtc { get; set; } //Booking might not have history
 
         public ICollection<BookingEntity> Bookings { get; set; } = new List<BookingEntity>();
+        public ICollection<PropertyImageEntity> Images { get; set; } = new List<PropertyImageEntity>();
     }
 }

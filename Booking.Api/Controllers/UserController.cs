@@ -8,6 +8,7 @@ using Booking.Application.Features.Users.Queries.GetMyProfile;
 using Booking.Application.Features.Users.Commands.Update;
 using Booking.Application.Features.Users.Commands.Delete;
 using Booking.Application.Features.Users.Commands.UploadProfilePhoto;
+using Booking.Application.Features.Users.Commands.RemoveProfilePhoto;
 
 namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, ApproveProperty, ManageBookings, ChangeEmail, ReactivateAccount
 {
@@ -77,6 +78,13 @@ namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, Ap
         {
             var result = await _mediator.Send(new UploadProfilePhotoCommand { File = file });
             return Ok(result);
+        }
+
+        [HttpDelete("profile-photo/delete")]
+        public async Task<ActionResult> RemoveProfilePicture()
+        {
+            await _mediator.Send(new RemoveProfilePhotoCommand());
+            return NoContent();
         }
     }
 }
