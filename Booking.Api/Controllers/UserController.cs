@@ -9,6 +9,8 @@ using Booking.Application.Features.Users.Commands.Update;
 using Booking.Application.Features.Users.Commands.Delete;
 using Booking.Application.Features.Users.Commands.UploadProfilePhoto;
 using Booking.Application.Features.Users.Commands.RemoveProfilePhoto;
+using Booking.Application.Features.Users.Commands.ChangePassword;
+using Booking.Application.Features.Users.Commands.ForgotPassword;
 
 namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, ApproveProperty, ManageBookings, ChangeEmail, ReactivateAccount
 {
@@ -84,6 +86,20 @@ namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, Ap
         public async Task<ActionResult> RemoveProfilePicture()
         {
             await _mediator.Send(new RemoveProfilePhotoCommand());
+            return NoContent();
+        }
+
+        [HttpPost("changePassword")]
+        public async Task<ActionResult> ChangeUserPassword([FromBody] ChangeUserPasswordDto dto)
+        {
+            await _mediator.Send(new ChangeUserPasswordCommand { changeUserPasswordDto = dto});
+            return NoContent();
+        }
+
+        [HttpPost("forgotPassword")]
+        public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
+        {
+            await _mediator.Send(command);
             return NoContent();
         }
     }

@@ -27,6 +27,8 @@ namespace Booking.Domain.Users
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow; 
         public DateTime? LastModifiedAt { get; set; }
+        public string PasswordResetToken {  get; set; } = string.Empty;
+        public DateTime? PasswordResetTokenExpiry { get; set; }
 
         public OwnerProfileEntity? OwnerProfileEntity { get; set; }
         public ICollection<PropertyEntity> OwnedProperties { get; set; } = new List<PropertyEntity>();
