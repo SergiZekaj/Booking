@@ -12,7 +12,8 @@ using Booking.Application.Features.Users.Commands.RemoveProfilePhoto;
 using Booking.Application.Features.Users.Commands.ChangePassword;
 using Booking.Application.Features.Users.Commands.ForgotPassword;
 
-namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, ApproveProperty, ManageBookings, ChangeEmail, ReactivateAccount
+namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, ApproveProperty, ManageBookings, ChangeEmail, ReactivateAccount, ApproveOwnerProfile, RejectOwnerProfile, GetAllOwnerProfiles, DeleteOwnerProfile
+                                      // TODO: Add OwnerProfile verification check before allowing property creation in CreatePropertyCommandHandler
 {
     [ApiController]
     [Route("api/v1/[controller]")]
