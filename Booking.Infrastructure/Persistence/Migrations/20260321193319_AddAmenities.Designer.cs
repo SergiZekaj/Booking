@@ -4,6 +4,7 @@ using Booking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    partial class BookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260321193319_AddAmenities")]
+    partial class AddAmenities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +54,7 @@ namespace Booking.Infrastructure.Migrations
 
             modelBuilder.Entity("Booking.Domain.Amenities.AmenityEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -62,7 +65,7 @@ namespace Booking.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Guid");
 
                     b.ToTable("Amenities");
                 });
@@ -75,9 +78,14 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<Guid>("AmenityId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("PropertyEntityId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("PropertyId", "AmenityId");
 
                     b.HasIndex("AmenityId");
+
+                    b.HasIndex("PropertyEntityId");
 
                     b.ToTable("PropertyAmenities");
                 });
@@ -404,6 +412,10 @@ namespace Booking.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Booking.Domain.Estate.PropertyEntity", null)
+                        .WithMany("PropertyAmenities")
+                        .HasForeignKey("PropertyEntityId");
+
                     b.HasOne("Booking.Domain.Estate.PropertyEntity", "Property")
                         .WithMany("Amenities")
                         .HasForeignKey("PropertyId")
@@ -535,6 +547,8 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("Bookings");
 
                     b.Navigation("Images");
+
+                    b.Navigation("PropertyAmenities");
                 });
 
             modelBuilder.Entity("Booking.Domain.Roles.RoleEntity", b =>

@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Addresses;
+using Booking.Domain.Amenities;
 using Booking.Domain.Bookings;
 using Booking.Domain.Enums;
 using Booking.Domain.PropertyImage;
@@ -37,5 +38,6 @@ namespace Booking.Domain.Estate
 
         public ICollection<BookingEntity> Bookings { get; set; } = new List<BookingEntity>();
         public ICollection<PropertyImageEntity> Images { get; set; } = new List<PropertyImageEntity>();
+        public ICollection<PropertyAmenityEntity> Amenities { get; set; } = new List<PropertyAmenityEntity>();
     }
 }

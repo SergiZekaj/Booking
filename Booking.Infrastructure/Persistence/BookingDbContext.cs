@@ -1,12 +1,13 @@
 ﻿using Booking.Domain.Addresses;
+using Booking.Domain.Amenities;
 using Booking.Domain.Bookings;
 using Booking.Domain.Estate;
 using Booking.Domain.OwnerProfiles;
+using Booking.Domain.PropertyImage;
 using Booking.Domain.Reviews;
 using Booking.Domain.Roles;
 using Booking.Domain.UserRoles;
 using Booking.Domain.Users;
-using Booking.Domain.PropertyImage;
 using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Infrastructure.Persistence
@@ -24,6 +25,8 @@ namespace Booking.Infrastructure.Persistence
         public DbSet<BookingEntity> Bookings { get; set; }    
         public DbSet<ReviewEntity> Reviews { get; set; }  
         public DbSet<PropertyImageEntity> PropertyImage { get; set; }
+        public DbSet<AmenityEntity> Amenities { get; set; }
+        public DbSet<PropertyAmenityEntity> PropertyAmenities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -104,6 +107,18 @@ namespace Booking.Infrastructure.Persistence
                     Description = "Default user role",
                     IsDefault = true
                 });
+            builder.Entity<PropertyAmenityEntity>()
+                 .HasKey(pa => new { pa.PropertyId, pa.AmenityId });
+
+            builder.Entity<PropertyAmenityEntity>()
+                .HasOne(pa => pa.Property)
+                .WithMany(p => p.Amenities)
+                .HasForeignKey(pa => pa.PropertyId);
+
+            builder.Entity<PropertyAmenityEntity>()
+                .HasOne(pa => pa.Amenity)
+                .WithMany(a => a.PropertyAmenities)
+                .HasForeignKey(pa => pa.AmenityId);
         }
  
     }

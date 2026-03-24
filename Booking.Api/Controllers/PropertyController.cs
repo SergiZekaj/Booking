@@ -1,10 +1,11 @@
-﻿using Booking.Application.Features.Property.Commands.Create;
+using Booking.Application.Features.Property.Commands.Create;
 using Booking.Application.Features.Property.Commands.Delete;
 using Booking.Application.Features.Property.Commands.Update;
 using Booking.Application.Features.Property.Commands.UploadPhoto;
 using Booking.Application.Features.Property.Queries.GetAll;
 using Booking.Application.Features.Property.Queries.GetById;
 using Booking.Application.Features.Property.Commands.DeletePhoto;
+using Booking.Application.Features.Reviews.Queries.GetPropertyReviews;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Booking.Application.Features.Property.Queries.GetAllPropertyPhotos;
@@ -91,6 +92,13 @@ namespace Booking.Api.Controllers
         {
             var query = await _mediator.Send(new GetAllPropertyPhotosQuery { PropertyId =  Id});
             return Ok(query);
+        }
+
+        [HttpGet("{id}/reviews")]
+        public async Task<ActionResult<List<GetPropertyReviewsDto>>> GetReviews([FromRoute] Guid id)
+        {
+            var result = await _mediator.Send(new GetPropertyReviewsQuery { PropertyId = id });
+            return Ok(result);
         }
     }
 }

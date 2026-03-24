@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Booking.Domain.Enums;
-using MediatR;
+﻿using Booking.Domain.Enums;
 
 namespace Booking.Application.Features.Property.Commands.Create
 {
     public class CreatePropertyDto
     {
-        public Guid OwnerId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public PropertyType PropertyType { get; set; }

@@ -1,26 +1,32 @@
-﻿using MediatR;
-using Booking.Application.Abstractions.Contracts;
+﻿using Booking.Application.Abstractions.Contracts;
 using Booking.Application.Contracts;
-using Booking.Domain.Estate;
 using Booking.Domain.Addresses;
-using System.Runtime.InteropServices;
+using Booking.Domain.Estate;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Booking.Application.Features.Property.Commands.Create
 {
     internal class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyCommand, Guid>
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPropertyRepository _propertyRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreatePropertyCommandHandler(IPropertyRepository propertyRepository, IUnitOfWork unitOfWork)
+        public CreatePropertyCommandHandler(IPropertyRepository propertyRepository, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
             _propertyRepository = propertyRepository;
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Guid> Handle(CreatePropertyCommand request, CancellationToken cancellationToken)
         {
+            var userId = Guid.Parse(_httpContextAccessor.HttpContext!.User.FindFirst("uid")!.Value);
             var dto = request.PropertyDto;
+
+            if (await _propertyRepository.ExistsAsync(userId, dto.Name, cancellationToken))
+                throw new Exception("You already have a property with this name.");
 
             var address = new AddressEntity
             {
@@ -34,7 +40,7 @@ namespace Booking.Application.Features.Property.Commands.Create
             var property = new PropertyEntity
             {
                 Id = Guid.NewGuid(),
-                OwnerId = dto.OwnerId,
+                OwnerId = userId,
                 Name = dto.Name,
                 Description = dto.Description,
                 PropertyType = dto.PropertyType,

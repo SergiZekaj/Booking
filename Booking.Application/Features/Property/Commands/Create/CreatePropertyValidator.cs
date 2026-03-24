@@ -32,9 +32,6 @@ namespace Booking.Application.Features.Property.Commands.Create
 
             RuleFor(x => x.PropertyDto.PostalCode)
                 .NotEmpty();
-
-            RuleFor(x => x.PropertyDto.OwnerId)
-                .NotEmpty();
         }
     }
 }

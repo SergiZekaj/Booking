@@ -42,5 +42,9 @@ namespace Booking.Infrastructure.Repositories
 
             return await query.ToListAsync(cancellationToken);
         }
+
+        public async Task<bool> ExistsAsync(Guid ownerId, string name, CancellationToken cancellationToken)
+            => await _context.Properties
+                .AnyAsync(p => p.OwnerId == ownerId && p.Name == name, cancellationToken);
     }
 }

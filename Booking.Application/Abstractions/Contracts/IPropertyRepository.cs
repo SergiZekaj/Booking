@@ -7,6 +7,6 @@ namespace Booking.Application.Abstractions.Contracts
     {
         Task<PropertyEntity?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken);
         Task<List<PropertyEntity>> GetAllActiveAsync(PropertyFilterDto filter, CancellationToken cancellationToken);
-
+        Task<bool> ExistsAsync(Guid ownerId, string name, CancellationToken cancellationToken);
     }
 }
