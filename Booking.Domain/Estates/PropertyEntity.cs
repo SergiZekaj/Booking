@@ -30,6 +30,7 @@ namespace Booking.Domain.Estate
         public int MaxGuests { get; set; }
         public TimeOnly CheckInTime { get; set; }
         public TimeOnly CheckOutTime { get; set; }
+        public decimal PricePerNight { get; set; }
         public bool IsActive { get; set; }
         public bool IsApproved { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

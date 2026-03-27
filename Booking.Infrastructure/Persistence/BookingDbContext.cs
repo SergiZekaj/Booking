@@ -100,13 +100,29 @@ namespace Booking.Infrastructure.Persistence
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<RoleEntity>().HasData(
-                new RoleEntity
-                {
-                    Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
-                    Name = "User",
-                    Description = "Default user role",
-                    IsDefault = true
-                });
+                 new RoleEntity
+                 {
+                     Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"),
+                     Name = "User",
+                     Description = "Default user role",
+                     IsDefault = true
+                 },
+                 new RoleEntity
+                 {
+                     Id = Guid.Parse("7c9e6679-7425-40de-944b-e07fc1f90ae7"),
+                     Name = "Admin",
+                     Description = "Administrator role",
+                     IsDefault = false
+                  },
+                  new RoleEntity
+                  {
+        
+                      Id = Guid.Parse("a3f1e2d4-5b6c-7a8b-9c0d-1e2f3a4b5c6d"),
+                      Name = "Host",
+                      Description = "Property owner role",
+                      IsDefault = false
+                  });
+
             builder.Entity<PropertyAmenityEntity>()
                  .HasKey(pa => new { pa.PropertyId, pa.AmenityId });
 
@@ -120,6 +136,5 @@ namespace Booking.Infrastructure.Persistence
                 .WithMany(a => a.PropertyAmenities)
                 .HasForeignKey(pa => pa.AmenityId);
         }
- 
     }
 }

@@ -8,5 +8,6 @@ namespace Booking.Application.Abstractions.Contracts
     public interface IRoleRepository : IGenericRepository<RoleEntity>
     {
         Task<RoleEntity?> GetDefaultRoleAsync(CancellationToken cancellationToken);
+        Task<RoleEntity?> GetByNameAsync(string name, CancellationToken cancellationToken);
     }
 }

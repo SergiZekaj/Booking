@@ -1,8 +1,9 @@
-﻿using MediatR;
-using Booking.Application.Abstractions.Contracts;
-using Booking.Domain.Users;
-using Booking.Domain.UserRoles;
+﻿using Booking.Application.Abstractions.Contracts;
 using Booking.Application.Contracts;
+using Booking.Domain.Roles;
+using Booking.Domain.UserRoles;
+using Booking.Domain.Users;
+using MediatR;
 
 namespace Booking.Application.Features.Users.Commands.Register
 {
@@ -27,9 +28,23 @@ namespace Booking.Application.Features.Users.Commands.Register
             if (existingUser != null)
                 throw new Exception("Email already registered");
 
-            var defaultRole = await _roleRepository.GetDefaultRoleAsync(cancellationToken);
-            if (defaultRole == null)
-                throw new Exception("No default role found");
+            //var defaultRole = await _roleRepository.GetDefaultRoleAsync(cancellationToken);
+            //if (defaultRole == null)
+            //    throw new Exception("No default role found");
+
+            RoleEntity? role;
+            if (!string.IsNullOrEmpty(dto.Role))
+            {
+                role = await _roleRepository.GetByNameAsync(dto.Role, cancellationToken);
+                if (role == null)
+                    throw new Exception($"Role '{dto.Role}' not found.");
+            }
+            else
+            {
+                role = await _roleRepository.GetDefaultRoleAsync(cancellationToken);
+                if (role == null)
+                    throw new Exception("No default role found.");
+            }
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
@@ -48,7 +63,7 @@ namespace Booking.Application.Features.Users.Commands.Register
             var userRole = new UserRoleEntity
             {
                 UserId = user.Id,
-                RoleId = defaultRole.Id,
+                RoleId = role.Id,
                 AssignedAt = DateTime.UtcNow
             };
 

@@ -18,6 +18,11 @@ namespace Booking.Infrastructure.Repositories
         }
 
         public async Task<RoleEntity?> GetDefaultRoleAsync(CancellationToken cancellationToken)
-            => await _context.Roles.FirstOrDefaultAsync(r => r.IsDefault, cancellationToken);
+           => await _context.Roles
+               .FirstOrDefaultAsync(r => r.IsDefault, cancellationToken);
+
+        public async Task<RoleEntity?> GetByNameAsync(string name, CancellationToken cancellationToken)
+            => await _context.Roles
+                .FirstOrDefaultAsync(r => r.Name == name, cancellationToken);
     }
 }

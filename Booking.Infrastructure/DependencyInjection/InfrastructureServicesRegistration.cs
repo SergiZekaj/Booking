@@ -33,6 +33,7 @@ namespace Booking.Infrastructure.DependencyInjection
             services.AddScoped<IAmenityRepository, AmenityRepository>();
             services.AddScoped<IPropertyAmenityRepository, PropertyAmenityRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {

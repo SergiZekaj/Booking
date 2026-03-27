@@ -4,6 +4,7 @@ using Booking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    partial class BookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260326125223_AddPricePerNightToProperty")]
+    partial class AddPricePerNightToProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -321,20 +324,6 @@ namespace Booking.Infrastructure.Migrations
                             Description = "Default user role",
                             IsDefault = true,
                             Name = "User"
-                        },
-                        new
-                        {
-                            Id = new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7"),
-                            Description = "Administrator role",
-                            IsDefault = false,
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = new Guid("a3f1e2d4-5b6c-7a8b-9c0d-1e2f3a4b5c6d"),
-                            Description = "Property owner role",
-                            IsDefault = false,
-                            Name = "Host"
                         });
                 });
 
