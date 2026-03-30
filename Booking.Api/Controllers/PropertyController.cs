@@ -9,6 +9,7 @@ using Booking.Application.Features.Reviews.Queries.GetPropertyReviews;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Booking.Application.Features.Property.Queries.GetAllPropertyPhotos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Booking.Api.Controllers
 {
@@ -24,6 +25,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Host")]
         public async Task<ActionResult<Guid>> Create([FromBody] CreatePropertyDto propertyDto)
         {
             var command = new CreatePropertyCommand
@@ -51,6 +53,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpPut("update/{id}")]
+        [Authorize(Roles = "Host")]
         public async Task<ActionResult<GetPropertyByIdDto>> Update([FromRoute] Guid id, [FromBody] UpdatePropertyDto updateDto)
         {
             var command = new UpdatePropertyCommand
@@ -63,6 +66,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpDelete("delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             await _mediator.Send(new DeletePropertyCommand { Id = id });
@@ -71,6 +75,7 @@ namespace Booking.Api.Controllers
 
         [HttpPost("{propertyId}/upload-photo")]
         [Consumes("multipart/form-data")]
+        [Authorize(Roles = "Host")]
         public async Task<ActionResult<string>> UploadPhoto([FromRoute] Guid propertyId, [FromForm] IFormFile file)
         {
             var result = await _mediator.Send(new UploadPropertyPhotoCommand
@@ -81,6 +86,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpDelete("delete-photo/{photoId}")]
+        [Authorize(Roles = "Host")]
         public async Task<IActionResult> DeletePhoto([FromRoute] Guid photoId)
         {
             await _mediator.Send(new DeletePropertyPhotoCommand { Id = photoId });

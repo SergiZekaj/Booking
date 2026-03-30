@@ -7,5 +7,6 @@ namespace Booking.Application.Abstractions.Contracts
     public interface IUserRepository : IGenericRepository<UserEntity>
     {
         Task<UserEntity?> GetByEmailAsync(string email);
+        Task<List<UserEntity>> GetAllAsync(CancellationToken cancellationToken);
     }
 }

@@ -113,10 +113,10 @@ namespace Booking.Infrastructure.Persistence
                      Name = "Admin",
                      Description = "Administrator role",
                      IsDefault = false
-                  },
+                 },
                   new RoleEntity
                   {
-        
+
                       Id = Guid.Parse("a3f1e2d4-5b6c-7a8b-9c0d-1e2f3a4b5c6d"),
                       Name = "Host",
                       Description = "Property owner role",

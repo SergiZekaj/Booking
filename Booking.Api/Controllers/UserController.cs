@@ -11,9 +11,9 @@ using Booking.Application.Features.Users.Commands.UploadProfilePhoto;
 using Booking.Application.Features.Users.Commands.RemoveProfilePhoto;
 using Booking.Application.Features.Users.Commands.ChangePassword;
 using Booking.Application.Features.Users.Commands.ForgotPassword;
+using Microsoft.AspNetCore.Authorization;
 
-namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, ApproveProperty, ManageBookings, ChangeEmail, ReactivateAccount, ApproveOwnerProfile, RejectOwnerProfile, GetAllOwnerProfiles, DeleteOwnerProfile
-                                      // TODO: Add OwnerProfile verification check before allowing property creation in CreatePropertyCommandHandler
+namespace Booking.Api.Controllers     
 {
     [ApiController]
     [Route("api/v1/[controller]")]
@@ -51,6 +51,7 @@ namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, Ap
         }
 
         [HttpGet("my-profile")]
+        [Authorize]
         public async Task<ActionResult<GetMyProfileDto>> GetMyProfile()
         {
             var result = await _mediator.Send(new GetMyProfileQuery());
@@ -58,6 +59,7 @@ namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, Ap
         }
 
         [HttpPut("update")]
+        [Authorize]
         public async Task<ActionResult<GetMyProfileDto>> Update([FromBody] UpdateUserDto updateUserDto) 
         {
             var command = new UpdateUserCommand
@@ -69,6 +71,7 @@ namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, Ap
         }
 
         [HttpDelete("delete")]
+        [Authorize]
         public async Task<ActionResult> Delete() 
         {
             await _mediator.Send(new DeleteUserCommand());
@@ -77,6 +80,7 @@ namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, Ap
 
         [HttpPost("upload-profile-photo")]
         [Consumes("multipart/form-data")]
+        [Authorize]
         public async Task<ActionResult<string>> UploadProfilePhoto([FromForm] IFormFile file)
         {
             var result = await _mediator.Send(new UploadProfilePhotoCommand { File = file });
@@ -84,6 +88,7 @@ namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, Ap
         }
 
         [HttpDelete("profile-photo/delete")]
+        [Authorize]
         public async Task<ActionResult> RemoveProfilePicture()
         {
             await _mediator.Send(new RemoveProfilePhotoCommand());
@@ -91,6 +96,7 @@ namespace Booking.Api.Controllers     // TODO: Admin endpoints - GetAllUsers, Ap
         }
 
         [HttpPost("changePassword")]
+        [Authorize]
         public async Task<ActionResult> ChangeUserPassword([FromBody] ChangeUserPasswordDto dto)
         {
             await _mediator.Send(new ChangeUserPasswordCommand { changeUserPasswordDto = dto});

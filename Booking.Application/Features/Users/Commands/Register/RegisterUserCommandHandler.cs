@@ -12,12 +12,14 @@ namespace Booking.Application.Features.Users.Commands.Register
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailService _emailService;
 
-        public RegisterUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository, IUnitOfWork unitOfWork) 
+        public RegisterUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository, IUnitOfWork unitOfWork, IEmailService emailService) 
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _unitOfWork = unitOfWork;
+            _emailService = emailService;
         }
 
         public async Task<Guid> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -27,10 +29,6 @@ namespace Booking.Application.Features.Users.Commands.Register
             var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
             if (existingUser != null)
                 throw new Exception("Email already registered");
-
-            //var defaultRole = await _roleRepository.GetDefaultRoleAsync(cancellationToken);
-            //if (defaultRole == null)
-            //    throw new Exception("No default role found");
 
             RoleEntity? role;
             if (!string.IsNullOrEmpty(dto.Role))
@@ -72,6 +70,12 @@ namespace Booking.Application.Features.Users.Commands.Register
 
             await _userRepository.AddAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            await _emailService.SendEmailAsync(
+                user.Email,
+                "Welcome to Booking App",
+                $"Hi {user.FirstName}, your account has been created successfully!"
+                );
 
             return user.Id;
         }

@@ -14,19 +14,22 @@ namespace Booking.Application.Features.Bookings.Commands.Create
         private readonly IUserRepository _userRepository;
         private readonly IBookingRepository _bookingRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailService _emailService;
 
         public CreateBookingCommandHandler(
             IHttpContextAccessor httpContextAccessor,
             IPropertyRepository propertyRepository,
             IUserRepository userRepository,
             IBookingRepository bookingRepository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IEmailService emailService)
         {
             _httpContextAccessor = httpContextAccessor;
             _propertyRepository = propertyRepository;
             _userRepository = userRepository;
             _bookingRepository = bookingRepository;
             _unitOfWork = unitOfWork;
+            _emailService = emailService;
         }
 
         public async Task<Guid> Handle(CreateBookingCommand command, CancellationToken cancellationToken)
@@ -34,7 +37,7 @@ namespace Booking.Application.Features.Bookings.Commands.Create
             var userId = Guid.Parse(_httpContextAccessor.HttpContext!.User.FindFirst("uid")!.Value);
             var dto = command.BookingDto;
 
-            var property = await _propertyRepository.GetByIdAsync(dto.PropertyId, cancellationToken);
+            var property = await _propertyRepository.GetByIdWithDetailsAsync(dto.PropertyId, cancellationToken);
             if (property == null)
                 throw new Exception("Property not found.");
             if (!property.IsApproved)
@@ -72,6 +75,18 @@ namespace Booking.Application.Features.Bookings.Commands.Create
 
             await _bookingRepository.AddAsync(booking, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            await _emailService.SendEmailAsync(
+                guest.Email,
+                "Booking Confirmed",
+                $"Hi {guest.FirstName}, your booking from {dto.StartDate:d} to {dto.EndDate:d} has been created successfully!"
+                );
+
+            await _emailService.SendEmailAsync(
+                property.Owner.Email,
+                "New Booking Request",
+                $"Hi, you have a new booking request for {property.Name} from {dto.StartDate:d} to {dto.EndDate:d}."
+                );
 
             return booking.Id;
         }

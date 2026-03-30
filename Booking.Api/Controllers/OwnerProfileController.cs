@@ -2,6 +2,7 @@
 using Booking.Application.Features.OwnerProfile.Commands.Update;
 using Booking.Application.Features.OwnerProfile.Queries.GetMyOwnerProfile;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Api.Controllers
@@ -18,6 +19,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize]
         public async Task<ActionResult<Guid>> Register([FromBody] CreateOwnerProfileDto createOwnerProfileDto)
         {
             var command = new CreateProfileCommand
@@ -31,6 +33,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpGet("my-profile")]
+        [Authorize]
         public async Task<ActionResult<GetMyOwnerProfileDto>> GetMyProfile()
         {
             var result = await _mediator.Send(new GetMyOwnerProfileQuery());
@@ -38,6 +41,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpPut("update")]
+        [Authorize]
         public async Task<ActionResult<UpdateOwnerProfileDto>> Update([FromBody] UpdateOwnerProfileDto updateDto)
         {
             var command = new UpdateOwnerProfileCommand

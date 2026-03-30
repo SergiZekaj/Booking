@@ -20,5 +20,12 @@ namespace Booking.Infrastructure.Features
                 .Include(u => u.UserRolesEntity)
                 .ThenInclude(ur => ur.Role)
                 .FirstOrDefaultAsync(u => u.Email == email);
+
+        public async Task<List<UserEntity>> GetAllAsync(CancellationToken cancellationToken)
+       => await _context.Users
+           .Include(u => u.UserRolesEntity)
+           .ThenInclude(ur => ur.Role)
+           .OrderByDescending(u => u.CreatedAt)
+           .ToListAsync(cancellationToken);
     }
 }

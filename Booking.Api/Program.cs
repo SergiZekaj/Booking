@@ -1,5 +1,4 @@
 using Booking.Api.Middleware;
-using Booking.Application.Abstractions.Contracts;
 using Booking.Application.Contracts;
 using Booking.Application.Features.DependencyInjection;
 using Booking.Infrastructure;
@@ -31,6 +30,8 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

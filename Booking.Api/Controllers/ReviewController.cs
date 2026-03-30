@@ -1,5 +1,6 @@
 using Booking.Application.Features.Reviews.Command.Create;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Api.Controllers
@@ -16,6 +17,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<Guid>> Create([FromBody] CreateReviewDto dto)
         {
             var result = await _mediator.Send(new CreateReviewCommand { ReviewDto = dto });

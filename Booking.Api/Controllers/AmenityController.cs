@@ -4,6 +4,7 @@ using Booking.Application.Features.Amenities.Command.RemoveAmenityFromProperty;
 using Booking.Application.Features.Amenities.Queries.GetAllAmenities;
 using Booking.Application.Features.Amenities.Queries.GetPropertyAmenities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Api.Controllers
@@ -20,6 +21,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Guid>> Create([FromBody] CreateAmenityDto dto)
         {
             var result = await _mediator.Send(new CreateAmenityCommand { AmenityDto = dto });
@@ -27,6 +29,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpGet("all")]
+        [Authorize(Roles = "Host")]
         public async Task<ActionResult<List<GetAllMyAmenitiesDto>>> GetAll()
         {
             var result = await _mediator.Send(new GetAllMyAmenitiesQuery());
@@ -34,6 +37,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpGet("property/{propertyId}")]
+        [Authorize(Roles = "Host")]
         public async Task<ActionResult<List<GetPropertyAmenitiesDto>>> GetPropertyAmenities([FromRoute] Guid propertyId)
         {
             var result = await _mediator.Send(new GetPropertyAmenitiesQuery { PropertyId = propertyId });
@@ -41,6 +45,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpPost("add-to-property")]
+        [Authorize(Roles = "Host")]
         public async Task<IActionResult> AddToProperty([FromBody] AddAmenityToPropertyCommand command)
         {
             await _mediator.Send(command);
@@ -48,6 +53,7 @@ namespace Booking.Api.Controllers
         }
 
         [HttpDelete("remove-from-property")]
+        [Authorize(Roles = "Host")]
         public async Task<IActionResult> RemoveFromProperty([FromBody] RemoveAmenityFromPropertyCommand command)
         {
             await _mediator.Send(command);

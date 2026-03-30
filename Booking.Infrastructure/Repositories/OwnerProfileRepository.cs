@@ -21,5 +21,10 @@ namespace Booking.Infrastructure.Repositories
         public async Task<OwnerProfileEntity?> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken)
             => await _context.OwnerProfiles
                 .FirstOrDefaultAsync(op => op.UserId == userId, cancellationToken);
+        public async Task<List<OwnerProfileEntity>> GetAllAsync(CancellationToken cancellationToken)
+       => await _context.OwnerProfiles
+           .Include(op => op.User)
+           .OrderByDescending(op => op.CreatedAt)
+           .ToListAsync(cancellationToken);
     }
 }
