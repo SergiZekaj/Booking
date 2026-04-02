@@ -15,6 +15,8 @@ namespace Booking.Application.Features.Bookings.Commands.Create
         private readonly IBookingRepository _bookingRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailService _emailService;
+        private readonly INotificationService _notificationService;
+        private readonly IKafkaProducer _kafkaProducer;
 
         public CreateBookingCommandHandler(
             IHttpContextAccessor httpContextAccessor,
@@ -22,7 +24,9 @@ namespace Booking.Application.Features.Bookings.Commands.Create
             IUserRepository userRepository,
             IBookingRepository bookingRepository,
             IUnitOfWork unitOfWork,
-            IEmailService emailService)
+            IEmailService emailService,
+            INotificationService notificationService,
+            IKafkaProducer kafkaProducer)
         {
             _httpContextAccessor = httpContextAccessor;
             _propertyRepository = propertyRepository;
@@ -30,6 +34,8 @@ namespace Booking.Application.Features.Bookings.Commands.Create
             _bookingRepository = bookingRepository;
             _unitOfWork = unitOfWork;
             _emailService = emailService;
+            _notificationService = notificationService;
+            _kafkaProducer = kafkaProducer;
         }
 
         public async Task<Guid> Handle(CreateBookingCommand command, CancellationToken cancellationToken)
@@ -76,6 +82,23 @@ namespace Booking.Application.Features.Bookings.Commands.Create
             await _bookingRepository.AddAsync(booking, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+            var bookingEvent = new
+            {
+                BookingId = booking.Id,
+                PropertyId = booking.PropertyId,
+                PropertyName = property.Name,
+                OwnerId = property.OwnerId,
+                OwnerEmail = property.Owner.Email,
+                GuestId = guest.Id,
+                GuestEmail = guest.Email,
+                GuestName = guest.FirstName,
+                StartDate = booking.StartDate,
+                EndDate = booking.EndDate,
+                CreatedAt = booking.CreatedAt
+            };
+
+            await _kafkaProducer.ProduceAsync("booking-created", bookingEvent);
+
             await _emailService.SendEmailAsync(
                 guest.Email,
                 "Booking Confirmed",
@@ -88,8 +111,17 @@ namespace Booking.Application.Features.Bookings.Commands.Create
                 $"Hi, you have a new booking request for {property.Name} from {dto.StartDate:d} to {dto.EndDate:d}."
                 );
 
+            await _notificationService.NotifyUserAsync(
+                property.OwnerId.ToString(),
+                $"You have a new booking request for {property.Name} from {dto.StartDate:d} to {dto.EndDate:d}."
+                );
+
+            await _notificationService.NotifyUserAsync(
+                userId.ToString(),
+                $"Your booking for {property.Name} from {dto.StartDate:d} to {dto.EndDate:d} has been created!"
+                );
+
             return booking.Id;
         }
     }
 }
-

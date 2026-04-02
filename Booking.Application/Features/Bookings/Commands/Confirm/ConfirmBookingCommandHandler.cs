@@ -12,17 +12,20 @@ namespace Booking.Application.Features.Bookings.Commands.Confirm
         private readonly IBookingRepository _bookingRepository;
         private readonly IPropertyRepository _propertyRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly INotificationService _notificationService;
 
         public ConfirmBookingCommandHandler(
             IHttpContextAccessor httpContextAccessor,
             IBookingRepository bookingRepository,
             IPropertyRepository propertyRepository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            INotificationService notificationService)
         {
             _httpContextAccessor = httpContextAccessor;
             _bookingRepository = bookingRepository;
             _propertyRepository = propertyRepository;
             _unitOfWork = unitOfWork;
+            _notificationService = notificationService;
         }
 
         public async Task<Unit> Handle(ConfirmBookingCommand command, CancellationToken cancellationToken)
@@ -48,6 +51,12 @@ namespace Booking.Application.Features.Bookings.Commands.Confirm
             booking.BookingStatus = BookingStatus.Confirmed;
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            await _notificationService.NotifyUserAsync(
+                booking.GuestId.ToString(),
+                $"Your booking has been confirmed!"
+                );
+
             return Unit.Value;
         }
     }

@@ -3,10 +3,7 @@ using Booking.Domain.Estate;
 using Booking.Domain.OwnerProfiles;
 using Booking.Domain.Reviews;
 using Booking.Domain.UserRoles;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Booking.Domain.Users
 {

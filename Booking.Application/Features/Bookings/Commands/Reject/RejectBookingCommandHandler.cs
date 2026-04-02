@@ -12,17 +12,20 @@ namespace Booking.Application.Features.Bookings.Commands.Reject
         private readonly IBookingRepository _bookingRepository;
         private readonly IPropertyRepository _propertyRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly INotificationService _notificationService;
 
         public RejectBookingCommandHandler(
             IHttpContextAccessor httpContextAccessor,
             IBookingRepository bookingRepository,
             IPropertyRepository propertyRepository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            INotificationService notificationService)
         {
             _httpContextAccessor = httpContextAccessor;
             _bookingRepository = bookingRepository;
             _propertyRepository = propertyRepository;
             _unitOfWork = unitOfWork;
+            _notificationService = notificationService;
         }
 
         public async Task<Unit> Handle(RejectBookingCommand command, CancellationToken cancellationToken)
@@ -48,6 +51,12 @@ namespace Booking.Application.Features.Bookings.Commands.Reject
             booking.BookingStatus = BookingStatus.Rejected;
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            await _notificationService.NotifyUserAsync(
+                booking.GuestId.ToString(),
+                $"Your booking has been rejected."
+                );
+
             return Unit.Value;
         }
     }

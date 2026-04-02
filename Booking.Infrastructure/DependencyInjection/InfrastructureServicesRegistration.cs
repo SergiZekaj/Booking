@@ -1,6 +1,7 @@
 using Booking.Application.Abstractions.Contracts;
 using Booking.Infrastructure.Contracts.AuthService;
 using Booking.Infrastructure.Features;
+using Booking.Infrastructure.Messaging;
 using Booking.Infrastructure.Persistence;
 using Booking.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,7 +20,13 @@ namespace Booking.Infrastructure.DependencyInjection
             string connectionString,
             IConfiguration configuration)
         {
-            services.AddDbContext<BookingDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<BookingDbContext>(options =>  
+            options.UseSqlServer(connectionString, sqlOptions =>
+            sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null
+                 )));
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthManager, AuthManager>();
@@ -34,6 +41,7 @@ namespace Booking.Infrastructure.DependencyInjection
             services.AddScoped<IPropertyAmenityRepository, PropertyAmenityRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddSingleton<IKafkaProducer, KafkaProducer>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -46,7 +54,7 @@ namespace Booking.Infrastructure.DependencyInjection
                         ValidateLifetime = true
                     };
                 });
-            
+
             return services;
         }
     }

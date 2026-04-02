@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="BookingLogger.Api/BookingLogger.Api.csproj" />
+  <Project Path="BookingLogger.Application/BookingLogger.Application.csproj" />
+  <Project Path="BookingLogger.Domain/BookingLogger.Domain.csproj" />
+  <Project Path="BookingLogger.Infrastructure/BookingLogger.Infrastructure.csproj" />
+</Solution>

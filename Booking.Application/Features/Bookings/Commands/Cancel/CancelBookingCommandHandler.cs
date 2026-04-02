@@ -12,15 +12,18 @@ namespace Booking.Application.Features.Bookings.Commands.Cancel
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IBookingRepository _bookingRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly INotificationService _notificationService;
 
         public CancelBookingCommandHandler(
             IHttpContextAccessor httpContextAccessor,
             IBookingRepository bookingRepository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            INotificationService notificationService)
         {
             _httpContextAccessor = httpContextAccessor;
             _bookingRepository = bookingRepository;
             _unitOfWork = unitOfWork;
+            _notificationService = notificationService;
         }
 
         public async Task<Unit> Handle(CancelBookingCommand command, CancellationToken cancellationToken)
@@ -42,6 +45,10 @@ namespace Booking.Application.Features.Bookings.Commands.Cancel
             booking.BookingStatus = BookingStatus.Cancelled;
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            await _notificationService.NotifyUserAsync(
+                booking.PropertyId.ToString(),
+                $"A booking has been cancelled by the guest.");
             return Unit.Value;
         }
     }
